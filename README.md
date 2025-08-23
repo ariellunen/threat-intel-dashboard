@@ -83,3 +83,4 @@ Backend uses Express and fetches data from external services.
 Frontend is a React app providing a simple dashboard for results.
 Tradeoffs: No caching layer or advanced error handling to keep solution simple.
 
+
