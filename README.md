@@ -48,34 +48,58 @@ VirusTotal_API_KEY=24843ad16c9a826921b437c1c1ef723323d303ce4494c5216939218ed3136
 IPQualityScore_API_KEY=CwMvwA3FvaqiuIZjmPoJ9v8y1OhHHxID
 ABUSEIPDB_API_KEY=c1083edbc608e5aa55626004c4c957f029a1fa596fad70aa2ff9bc13c332ae06fca3bbdef683f1db
 ```
-If you prefer, you can also copy .env.example and add your own API keys.
-
-Running the Application
-Start the backend:
+---
+## Running the Application
+1. Start the backend:
+```bash
 cd backend
 npm start
-Start the frontend (in another terminal):
+```
+2. Start the frontend (in another terminal):
+```bash
 cd frontend
 npm start
-Backend: http://localhost:5000
-Frontend: http://localhost:3000 (connects to backend automatically)
-
-API Endpoints (Backend)
+```
+- Backend: http://localhost:5000
+- Frontend: http://localhost:3000 (connects to backend automatically)
+---
+## API Endpoints (Backend)
 GET /api/intel?ip=<IP_ADDRESS>
-Returns threat intelligence data for the given IP from VirusTotal, AbuseIPDB, and IPQualityScore.
+Returns aggregated threat intelligence data for the given IP address.
 
-Running Tests
+## Example Response:
+```bash
+{
+  "ip": "8.8.8.8",
+  "hostname": "Google LLC",
+  "isp": "Google",
+  "country": "US",
+  "city": "Mountain View",
+  "abuseScore": 0,
+  "recentReports": 0,
+  "vpnOrProxy": false,
+  "threatScore": 5
+}
+```
+---
+## Running Tests
 Backend tests:
+```bash
 cd backend
 npm test
-Frontend tests (if included):
+```
+Frontend tests:
+```bash
 cd frontend
 npm test
-Development Notes
-The .env file includes the assignment API keys so setup is quick.
-Backend uses Express and fetches data from external services.
-Frontend is a React app providing a simple dashboard for results.
-Tradeoffs: No caching layer or advanced error handling to keep solution simple.
+```
+---
+## Development Notes
+- Material-UI provides consistent styling across components
+- Tests cover both happy path and error scenarios
+- Error handling gracefully manages API failures
+- Component-based architecture for maintainability
+
 
 
 
