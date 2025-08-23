@@ -48,3 +48,4 @@ This repository contains a full-stack **Threat Intelligence Dashboard** with a R
 - Create separate files for new components
 - Update the main component (`IntelDashboard`) to include new features
 - Write tests for new functionality
+- Use Material-UI for consistent styling
