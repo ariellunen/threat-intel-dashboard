@@ -36,7 +36,7 @@ This repository contains a full-stack **Threat Intelligence Dashboard** with a R
 - **Entry point**: `src/index.js`
 - **Framework**: React (with Material-UI)
 - **Main component**: `IntelDashboard`
-- **API calls**: Made using Axios
+- **API calls**: Fetch API
 - **State management**: React Context API
 - **Testing**: Jest + React Testing Library
 
@@ -47,5 +47,5 @@ This repository contains a full-stack **Threat Intelligence Dashboard** with a R
 - Follow the existing folder structure
 - Create separate files for new components
 - Update the main component (`IntelDashboard`) to include new features
-- Write tests for new functionality
+- Write tests for new functionality (.test.js files)
 - Use Material-UI for consistent styling
