@@ -17,20 +17,6 @@ function isValidIP(ip) {
   return ipv4Regex.test(ip) || ipv6Regex.test(ip);
 }
 
-async function fetchWithRateLimit(url, options, serviceName) {
-  const res = await fetch(url, options);
-
-  if (res.status === 429) {
-    throw new Error(`Rate limit reached for ${serviceName}, try again later.`);
-  }
-
-  if (!res.ok) {
-    throw new Error(`${serviceName} request failed with status ${res.status}`);
-  }
-
-  return res.json();
-}
-
 app.get("/api/intel", async (req, res) => {
   const { ip } = req.query;
 
@@ -39,46 +25,49 @@ app.get("/api/intel", async (req, res) => {
   }
 
   try {
-    // AbuseIPDB
-    const abuseRes = await fetch(
-      `https://api.abuseipdb.com/api/v2/check?ipAddress=${ip}&maxAgeInDays=90`,
-      {
-        headers: {
-          Accept: "application/json",
-          Key: process.env.ABUSEIPDB_API_KEY,
-        },
-      }
-    );
-
-    if (abuseRes.status === 429) {
-      return res.status(429).json({ error: "Rate limit exceeded" });
-    }
-
-    const abuseData = await abuseRes.json();
-
-    // ProxyCheck.io
-    const proxyRes = await fetch(
-      `https://proxycheck.io/v2/${ip}?vpn=1&asn=1&risk=1&port=1&seen=1`
-    );
-    const proxyData = await proxyRes.json();
-    const ipInfo = proxyData[ip] || {};
-
-    if (proxyRes.status === 429) {
-      return res.status(429).json({ error: "Rate limit exceeded" });
-    }
-
-    // VirusTotal
-    const vtRes = await fetch(
-      `https://www.virustotal.com/api/v3/ip_addresses/${ip}`,
-      {
+    const [abuseRes, proxyRes, vtRes] = await Promise.allSettled([
+      fetch(
+        `https://api.abuseipdb.com/api/v2/check?ipAddress=${ip}&maxAgeInDays=90`,
+        {
+          headers: {
+            Accept: "application/json",
+            Key: process.env.ABUSEIPDB_API_KEY,
+          },
+        }
+      ),
+      fetch(`https://proxycheck.io/v2/${ip}?vpn=1&asn=1&risk=1&port=1&seen=1`),
+      fetch(`https://www.virustotal.com/api/v3/ip_addresses/${ip}`, {
         headers: { "x-apikey": process.env.VIRUSTOTAL_API_KEY },
-      }
-    );
-    const vtData = await vtRes.json();
+      }),
+    ]);
 
-    if (vtRes.status === 429) {
+    if (abuseRes.status === "fulfilled" && abuseRes.value.status === 429) {
       return res.status(429).json({ error: "Rate limit exceeded" });
     }
+    if (proxyRes.status === "fulfilled" && proxyRes.value.status === 429) {
+      return res.status(429).json({ error: "Rate limit exceeded" });
+    }
+    if (vtRes.status === "fulfilled" && vtRes.value.status === 429) {
+      return res.status(429).json({ error: "Rate limit exceeded" });
+    }
+
+    // Extract data with fallbacks for failed requests
+    const abuseData =
+      abuseRes.status === "fulfilled" && abuseRes.value.ok
+        ? await abuseRes.value.json()
+        : { data: { abuseConfidenceScore: 0, totalReports: 0 } };
+
+    const proxyData =
+      proxyRes.status === "fulfilled" && proxyRes.value.ok
+        ? await proxyRes.value.json()
+        : { [ip]: {} };
+
+    const vtData =
+      vtRes.status === "fulfilled" && vtRes.value.ok
+        ? await vtRes.value.json()
+        : { data: { attributes: { reputation: 0, network: null } } };
+
+    const ipInfo = proxyData[ip] || {};
 
     const aggregated = {
       ip,
