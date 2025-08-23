@@ -64,7 +64,17 @@ npm start
 - Frontend: http://localhost:3000 (connects to backend automatically)
 ---
 ## API Endpoints (Backend)
-GET /api/intel?ip=<IP_ADDRESS>
+
+### Get IP Intelligence
+
+**Request**
+
+ GET /api/intel?ip=<IP_ADDRESS>
+ 
+**Example**
+```bash
+curl "http://localhost:5000/api/intel?ip=8.8.8.8"
+```
 Returns aggregated threat intelligence data for the given IP address.
 
 ## Example Response:
@@ -99,6 +109,7 @@ npm test
 - Tests cover both happy path and error scenarios
 - Error handling gracefully manages API failures
 - Component-based architecture for maintainability
+
 
 
 
