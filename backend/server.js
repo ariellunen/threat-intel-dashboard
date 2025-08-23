@@ -71,7 +71,7 @@ app.get("/api/intel", async (req, res) => {
     const vtRes = await fetch(
       `https://www.virustotal.com/api/v3/ip_addresses/${ip}`,
       {
-        headers: { "x-apikey": process.env.VirusTotal_API_KEY },
+        headers: { "x-apikey": process.env.VIRUSTOTAL_API_KEY },
       }
     );
     const vtData = await vtRes.json();
