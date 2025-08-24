@@ -116,8 +116,8 @@ Returns aggregated threat intelligence data for the given IP address.
 
 ## External APIs Used
 
-- VirusTotal – provides IP reputation and threat analysis based on data from multiple security vendors.
-- AbuseIPDB – community-driven database that tracks abusive IP addresses, reporting abuse scores and recent activity.
+- **VirusTotal** – provides IP reputation and threat analysis based on data from multiple security vendors.
+- **AbuseIPDB** – community-driven database that tracks abusive IP addresses, reporting abuse scores and recent activity.
 
 **The backend queries these APIs and combines the results into a single, clean JSON response for the frontend.**
 
