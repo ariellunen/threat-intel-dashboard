@@ -14,9 +14,7 @@ function App() {
       if (!res.ok) throw new Error("Failed to fetch data");
       const json = await res.json();
 
-      setResults((prev) =>
-        [json, ...prev.filter((i) => i.ip !== json.ip)].slice(0, 10)
-      );
+      setResults((prev) => [json, ...prev].slice(0, 10));
 
       setIp("");
     } catch (err) {
